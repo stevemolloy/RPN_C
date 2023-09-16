@@ -5,7 +5,7 @@
 
 #define DELIM " "
 #define MAX_TOKENS 50
-#define ASSERT_M(exp, msg) assert(((void)msg, exp))
+#define ASSERT(exp, msg) assert(exp && msg)
 
 typedef struct Stack {
   float stack[MAX_TOKENS];
@@ -24,8 +24,6 @@ int main(void) {
 
   char *token_list[MAX_TOKENS] = {0};
   int token_count = tokenize_string(calc_string, token_list);
-  // printf("Token list: ");
-  // print_token_list(token_list);
 
   Stack s = {0};
   for (int i=0; i<token_count; i++) {
@@ -53,7 +51,7 @@ int main(void) {
     }
   }
 
-  ASSERT_M(s.top == 1, "Stack not properly consumed");
+  ASSERT(s.top == 1, "Stack not properly consumed");
   printf("Answer ==> %f\n", s.stack[--s.top]);
 
   return 0;
