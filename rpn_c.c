@@ -15,9 +15,11 @@ typedef struct Stack {
 void print_token_list(char*[]);
 int tokenize_string(char[], char*[]);
 void print_stack(Stack);
+float pop_from_stack(Stack*);
+void push_to_stack(Stack*, float);
 
 int main(void) {
-  char calc_string[] = "1 2 + 4 7 / 22 - *";
+  char calc_string[] = "10 2 + 4 7 / 22 - *";
   printf("Input string: \"%s\"\n", calc_string);
 
   char *token_list[MAX_TOKENS] = {0};
@@ -28,25 +30,24 @@ int main(void) {
   Stack s = {0};
   for (int i=0; i<token_count; i++) {
     if (strcmp(token_list[i], "+") == 0) {
-      float b = s.stack[--s.top];
-      float a = s.stack[--s.top];
-      s.stack[s.top++] = a + b;
+      float b = pop_from_stack(&s);
+      float a = pop_from_stack(&s);
+      push_to_stack(&s, a + b);
     }
     else if (strcmp(token_list[i], "-") == 0) {
-      float b = s.stack[--s.top];
-      float a = s.stack[--s.top];
-      s.stack[s.top++] = a - b;
+      float b = pop_from_stack(&s);
+      float a = pop_from_stack(&s);
+      push_to_stack(&s, a - b);
     }
     else if (strcmp(token_list[i], "*") == 0) {
-      float b = s.stack[--s.top];
-      float a = s.stack[--s.top];
-      s.stack[s.top++] = a * b;
+      float b = pop_from_stack(&s);
+      float a = pop_from_stack(&s);
+      push_to_stack(&s, a * b);
     }
     else if (strcmp(token_list[i], "/") == 0) {
-      float b = s.stack[--s.top];
-      float a = s.stack[--s.top];
-      s.stack[s.top] = a / b;
-      s.top++;
+      float b = pop_from_stack(&s);
+      float a = pop_from_stack(&s);
+      push_to_stack(&s, a / b);
     } else {
       s.stack[s.top++] = strtof(token_list[i], NULL);
     }
@@ -90,5 +91,13 @@ void print_token_list(char* str_array[]) {
     printf("%s ", str_array[i]);
   }
   printf("\n");
+}
+
+float pop_from_stack(Stack *s) {
+  return s->stack[--s->top];
+}
+
+void push_to_stack(Stack *s, float f) {
+  s->stack[s->top++] = f;
 }
 
