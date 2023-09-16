@@ -9,8 +9,14 @@
 #define MAX_TOKENS 50
 
 int main(void) {
-  char calc_string[] = "10 2 + 4 7 / 22 - *";
-  printf("Input string: \"%s\"\n", calc_string);
+  // char calc_string[] = "10 2 + 4 7 / 22 - *";
+  printf("Enter an RPN string for calculation\n:> ");
+
+  char calc_string[MAX_TOKENS];
+  fgets(calc_string, MAX_TOKENS, stdin);
+  calc_string[strlen(calc_string) - 1] = '\0';
+
+  // printf("Input string: \"%s\"\n", calc_string);
 
   char *token_list[MAX_TOKENS] = {0};
   int token_count = tokenize_string(calc_string, token_list);
