@@ -16,8 +16,15 @@ int main(void) {
   while (1) {
     clear();
     printw("Stack\n");
-    for (int i=0; i<s.top; i++) {
-      printw("%f\n", s.stack[i]);
+    for (int i=s.top-1; i>=0; i--) {
+      switch (s.stack[i].type) {
+        case TYPE_VAL:
+          printw("%f\n", s.stack[i].val);
+          break;
+        case TYPE_NAME:
+          printw("%s\n", s.stack[i].name);
+          break;
+      }
     }
     printw("\n%s ", prompt);
     refresh();

@@ -7,30 +7,46 @@
 
 #define DELIM " "
 
-bool is_binary_op(char*);
-
 void consume_tokens(Stack *s, char *tok_list[], int tok_count) {
   for (int i=0; i<tok_count; i++) {
     if (is_binary_op(tok_list[i])) {
-      if (s->top < 2) {
-        printw("Stack should contain two or more elements for this operation.");
-        return;
-      }
-      float b = pop_from_stack(s);
-      float a = pop_from_stack(s);
+      if (s->top < 2) return;
+      Token new_tok = {0};
+      float b = pop_from_stack(s).val;
+      float a = pop_from_stack(s).val;
       if (strcmp(tok_list[i], "+") == 0) {
-        push_to_stack(s, a + b);
+        new_tok = float_to_token(a + b);
       } else if (strcmp(tok_list[i], "-") == 0) {
-        push_to_stack(s, a - b);
+        new_tok = float_to_token(a - b);
       } else if (strcmp(tok_list[i], "*") == 0) {
-        push_to_stack(s, a * b);
+        new_tok = float_to_token(a * b);
       } else if (strcmp(tok_list[i], "/") == 0) {
-        push_to_stack(s, a / b);
+        new_tok = float_to_token(a / b);
       }
+      push_to_stack(s, new_tok);
     } else {
-      s->stack[s->top++] = strtof(tok_list[i], NULL);
+      float value = strtof(tok_list[i], NULL);
+      s->stack[s->top++] = float_to_token(value);
     }
   }
+}
+
+Token float_to_token(float val) {
+  Token tok = {
+    .val = val,
+    .name = "",
+    .type = TYPE_VAL
+  };
+  return tok;
+}
+
+Token string_to_token(char name[]) {
+  Token tok = {
+    .val = 0,
+    .name = name,
+    .type = TYPE_VAL
+  };
+  return tok;
 }
 
 bool is_binary_op(char *tok) {
@@ -44,7 +60,7 @@ bool is_binary_op(char *tok) {
 void print_stack(Stack stack) {
   printf("Stack: ");
   for (int i=0; i<stack.top; i++) {
-    printf("%f ", stack.stack[i]);
+    printf("%f ", stack.stack[i].val);
   }
   printf("\n");
 }
@@ -75,13 +91,13 @@ void print_token_list(char* str_array[]) {
   printf("\n");
 }
 
-float pop_from_stack(Stack *s) {
+Token pop_from_stack(Stack *s) {
   assert(s->top>0 && "Attempt to pop from an empty stack.");
   return s->stack[--s->top];
 }
 
-void push_to_stack(Stack *s, float f) {
+void push_to_stack(Stack *s, Token t) {
   assert(s->top < MAX_STACK_SIZE && "Attempt to push to a full stack.");
-  s->stack[s->top++] = f;
+  s->stack[s->top++] = t;
 }
 
