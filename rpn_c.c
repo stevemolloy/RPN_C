@@ -8,24 +8,31 @@
 #define ASSERT(exp, msg) assert(exp && msg)
 #define MAX_TOKENS 50
 
+const char *prompt = "::> ";
+
 int main(void) {
-  // char calc_string[] = "10 2 + 4 7 / 22 - *";
-  printf("Enter an RPN string for calculation\n:> ");
-
-  char calc_string[MAX_TOKENS];
-  fgets(calc_string, MAX_TOKENS, stdin);
-  calc_string[strlen(calc_string) - 1] = '\0';
-
-  // printf("Input string: \"%s\"\n", calc_string);
-
-  char *token_list[MAX_TOKENS] = {0};
-  int token_count = tokenize_string(calc_string, token_list);
-
   Stack s = {0};
-  consume_tokens(&s, token_list, token_count);
+  char calc_string[MAX_TOKENS];
+  // char calc_string[] = "10 2 + 4 7 / 22 - *";
 
-  ASSERT(s.top == 1, "Stack not properly consumed");
-  printf("Answer ==> %f\n", s.stack[--s.top]);
+  printf("Enter an RPN string for calculation\n");
+  while (1) {
+    printf("%s ", prompt);
+    fgets(calc_string, MAX_TOKENS, stdin);
+    calc_string[strlen(calc_string) - 1] = '\0';
+
+    if (strcmp(calc_string, "quit") == 0 || strcmp(calc_string, "exit") == 0) {
+      break;
+    }
+
+    char *token_list[MAX_TOKENS] = {0};
+    int token_count = tokenize_string(calc_string, token_list);
+
+    consume_tokens(&s, token_list, token_count);
+
+    ASSERT(s.top == 1, "Stack not properly consumed");
+    printf("Answer ==> %f\n", s.stack[--s.top]);
+  }
 
   return 0;
 }
