@@ -1,7 +1,7 @@
 #ifndef CALC_H
 #define CALC_H
 
-#define MAX_STACK_SIZE 50
+#define MAX_STACK_SIZE 1024
 
 typedef struct Stack {
   float stack[MAX_STACK_SIZE];

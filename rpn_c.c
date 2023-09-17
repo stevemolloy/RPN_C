@@ -1,24 +1,25 @@
-#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <assert.h>
 #include <curses.h>
 
 #include "calc.h"
 
-#define ASSERT(exp, msg) assert(exp && msg)
 #define MAX_TOKENS 50
 
 const char *prompt = "::> ";
 
 int main(void) {
   Stack s = {0};
-  // char calc_string[] = "10 2 + 4 7 / 22 - *";
 
 	initscr();			/* Start curses mode 		  */
   printw("Enter an RPN string for calculation\n");
   while (1) {
-    printw("%s ", prompt);
+    clear();
+    printw("Stack\n");
+    for (int i=0; i<s.top; i++) {
+      printw("%f\n", s.stack[i]);
+    }
+    printw("\n%s ", prompt);
     refresh();
 
     char calc_string[MAX_TOKENS];
@@ -35,9 +36,6 @@ int main(void) {
     int token_count = tokenize_string(calc_string, token_list);
 
     consume_tokens(&s, token_list, token_count);
-
-    ASSERT(s.top == 1, "Stack not properly consumed");
-    printw("Answer ==> %f\n", s.stack[--s.top]);
   }
 
 	endwin();			/* End curses mode		  */
