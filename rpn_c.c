@@ -1,7 +1,8 @@
-#include<stdio.h>
-#include<string.h>
-#include<stdlib.h>
-#include<assert.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <assert.h>
+#include <curses.h>
 
 #include "calc.h"
 
@@ -12,14 +13,19 @@ const char *prompt = "::> ";
 
 int main(void) {
   Stack s = {0};
-  char calc_string[MAX_TOKENS];
   // char calc_string[] = "10 2 + 4 7 / 22 - *";
 
-  printf("Enter an RPN string for calculation\n");
+	initscr();			/* Start curses mode 		  */
+  printw("Enter an RPN string for calculation\n");
   while (1) {
-    printf("%s ", prompt);
-    fgets(calc_string, MAX_TOKENS, stdin);
-    calc_string[strlen(calc_string) - 1] = '\0';
+    printw("%s ", prompt);
+    refresh();
+
+    char calc_string[MAX_TOKENS];
+    if (getnstr(calc_string, MAX_TOKENS)) {
+      printw("Could not read string. Terminating.");
+      exit(1);
+    }
 
     if (strcmp(calc_string, "quit") == 0 || strcmp(calc_string, "exit") == 0) {
       break;
@@ -31,8 +37,10 @@ int main(void) {
     consume_tokens(&s, token_list, token_count);
 
     ASSERT(s.top == 1, "Stack not properly consumed");
-    printf("Answer ==> %f\n", s.stack[--s.top]);
+    printw("Answer ==> %f\n", s.stack[--s.top]);
   }
+
+	endwin();			/* End curses mode		  */
 
   return 0;
 }
