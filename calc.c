@@ -8,26 +8,25 @@
 #define DELIM " "
 
 void consume_tokens(Stack *s, char *tok_list[], int tok_count) {
+  float value = 0;
   for (int i=0; i<tok_count; i++) {
     if (is_binary_op(tok_list[i])) {
       if (s->top < 2) return;
-      Token new_tok = {0};
       float b = pop_from_stack(s).val;
       float a = pop_from_stack(s).val;
       if (strcmp(tok_list[i], "+") == 0) {
-        new_tok = float_to_token(a + b);
+        value = a + b;
       } else if (strcmp(tok_list[i], "-") == 0) {
-        new_tok = float_to_token(a - b);
+        value = a - b;
       } else if (strcmp(tok_list[i], "*") == 0) {
-        new_tok = float_to_token(a * b);
+        value = a * b;
       } else if (strcmp(tok_list[i], "/") == 0) {
-        new_tok = float_to_token(a / b);
+        value = a / b;
       }
-      push_to_stack(s, new_tok);
     } else {
-      float value = strtof(tok_list[i], NULL);
-      s->stack[s->top++] = float_to_token(value);
+      value = strtof(tok_list[i], NULL);
     }
+    push_to_stack(s, float_to_token(value));
   }
 }
 
