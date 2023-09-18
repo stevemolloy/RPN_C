@@ -10,6 +10,7 @@ const char *prompt = "::> ";
 
 int main(void) {
   Stack s = {0};
+  VarList *v = new_varlist();
 
 	initscr();			/* Start curses mode 		  */
   printw("Enter an RPN string for calculation\n");
@@ -25,6 +26,10 @@ int main(void) {
           printw("%s\n", s.stack[i].name);
           break;
       }
+    }
+    printw("\nVariables\n");
+    for (int i=0; i<v->length; i++) {
+      printw("%s ==> %f\n", v->defs[i].name, v->defs[i].value);
     }
     printw("\n%s ", prompt);
     refresh();
@@ -42,7 +47,7 @@ int main(void) {
     char *token_list[MAX_TOKENS] = {0};
     int token_count = tokenize_string(calc_string, token_list);
 
-    consume_tokens(&s, token_list, token_count);
+    consume_tokens(&s, v, token_list, token_count);
   }
 
 	endwin();			/* End curses mode		  */
