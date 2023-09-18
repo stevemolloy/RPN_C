@@ -15,8 +15,19 @@ void consume_tokens(Stack *s, VarList *v, char *tok_list[], int tok_count) {
   for (int i=0; i<tok_count; i++) {
     if (is_binary_op(tok_list[i])) {
       if (s->top < 2) return;
-      float b = pop_from_stack(s).val;
-      float a = pop_from_stack(s).val;
+      float b, a;
+      Token b_tok = pop_from_stack(s);
+      if (b_tok.type == TYPE_VAL) {
+        b = b_tok.val;
+      } else {
+        find_variable(v, b_tok.name, &b);
+      }
+      Token a_tok = pop_from_stack(s);
+      if (a_tok.type == TYPE_VAL) {
+        a = a_tok.val;
+      } else {
+        find_variable(v, a_tok.name, &a);
+      }
       if (strcmp(tok_list[i], "+") == 0) {
         tok = float_to_token(a + b);
       } else if (strcmp(tok_list[i], "-") == 0) {
