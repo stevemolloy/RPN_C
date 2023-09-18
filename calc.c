@@ -26,6 +26,7 @@ void consume_tokens(Stack *s, VarList *v, char *tok_list[], int tok_count) {
       } else if (strcmp(tok_list[i], "/") == 0) {
         tok = float_to_token(a / b);
       }
+      push_to_stack(s, tok);
     } else if (strcmp(tok_list[i], "=") == 0) {
       if (s->top < 2) return;
       Token b = pop_from_stack(s);
@@ -38,11 +39,12 @@ void consume_tokens(Stack *s, VarList *v, char *tok_list[], int tok_count) {
       add_variable(v, a.name, b.val);
     } else if (isalpha(tok_list[i][0])) {
       tok = string_to_token(tok_list[i]);
+      push_to_stack(s, tok);
     } else {
       float value = strtof(tok_list[i], NULL);
       tok = float_to_token(value);
+      push_to_stack(s, tok);
     }
-    push_to_stack(s, tok);
   }
 }
 
@@ -144,5 +146,15 @@ int add_variable(VarList* v, char* name, float value) {
   v->length++;
   
   return 0;
+}
+
+int find_variable(VarList *v, char *var_name, float *ret_val) {
+  for (int i=0; i<v->length; i++) {
+    if (strcmp(v->defs[i].name, var_name) == 0) {
+      *ret_val = v->defs[i].value;
+      return 0;
+    }
+  }
+  return -1;
 }
 
