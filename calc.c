@@ -48,6 +48,12 @@ void consume_tokens(Stack *s, VarList *v, char *tok_list[], int tok_count) {
         return;
       }
       add_variable(v, a.name, b.val);
+    } else if (strcmp(tok_list[i], "swap") == 0) {
+      if (s->top < 2) return;
+      Token b_tok = pop_from_stack(s);
+      Token a_tok = pop_from_stack(s);
+      push_to_stack(s, b_tok);
+      push_to_stack(s, a_tok);
     } else if (isalpha(tok_list[i][0])) {
       tok = string_to_token(tok_list[i]);
       push_to_stack(s, tok);
