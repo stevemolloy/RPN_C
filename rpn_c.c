@@ -5,6 +5,8 @@
 #include "calc.h"
 
 #define MAX_TOKENS 50
+#define STACK_X_POS 40
+#define VAR_X_POS 60
 
 const char *prompt = "::> ";
 
@@ -13,24 +15,30 @@ int main(void) {
   VarList *v = new_varlist();
 
 	initscr();			/* Start curses mode 		  */
-  printw("Enter an RPN string for calculation\n");
   while (1) {
     clear();
-    printw("Stack\n");
+    int y_pos = 0;
+    move(0, STACK_X_POS);
+    printw("Stack");
     for (int i=s.top-1; i>=0; i--) {
+      move(++y_pos, STACK_X_POS);
       switch (s.stack[i].type) {
         case TYPE_VAL:
-          printw("%f\n", s.stack[i].val);
+          printw("%f", s.stack[i].val);
           break;
         case TYPE_NAME:
-          printw("%s\n", s.stack[i].name);
+          printw("%s", s.stack[i].name);
           break;
       }
     }
-    printw("\nVariables\n");
+    y_pos = 0;
+    move(y_pos, VAR_X_POS);
+    printw("Variables");
     for (int i=0; i<v->length; i++) {
-      printw("%s ==> %f\n", v->defs[i].name, v->defs[i].value);
+      move(++y_pos, VAR_X_POS);
+      printw("%s ==> %f", v->defs[i].name, v->defs[i].value);
     }
+    move(s.top > v->length ? s.top+2 : v->length+2, 0);
     printw("\n%s ", prompt);
     refresh();
 
