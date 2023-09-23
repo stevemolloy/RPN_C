@@ -7,12 +7,16 @@
 #define MAX_TOKENS 50
 #define STACK_X_POS 40
 #define VAR_X_POS 60
+#define MAX_MESSAGE_LEN 1024
 
 const char *prompt = "::> ";
+char *messages;
 
 int main(void) {
   Stack s = {0};
   VarList *v = new_varlist();
+
+  messages = malloc(sizeof(char[MAX_MESSAGE_LEN]));
 
 	initscr();			/* Start curses mode 		  */
   while (1) {
