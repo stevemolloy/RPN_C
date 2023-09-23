@@ -64,6 +64,11 @@ void consume_tokens(Stack *s, VarList *v, char *tok_list[], int tok_count) {
     } else if (strcmp(tok_list[i], "pop") == 0) {
       if (s->top<1) return;
       pop_from_stack(s);
+    } else if (strcmp(tok_list[i], "reset") == 0) {
+      s->top = 0;
+      v->length = 0;
+    } else if (strcmp(tok_list[i], "clear") == 0) {
+      s->top = 0;
     } else if (isalpha(tok_list[i][0])) {
       tok = string_to_token(tok_list[i]);
       push_to_stack(s, tok);
